@@ -30,9 +30,6 @@ export async function siginup(req, res) {
 
         const ramdomAvtar = `https://avatar.iran.liara.run/public/${index}.png`
 
-
-
-
         const newUser = await User.create({
             fullName,
             email,

@@ -7,11 +7,16 @@ import cookieParser from "cookie-parser"
 import authUsers from './routers/userRoute.js';
 import chatRoutes from './routers/chat.Route.js';
 
-
+import cors from 'cors';
 import connectDb from '../src/lib/db.js'
 const app  = express()
 const PORT = 4000;
 
+
+app.use(cors({
+    origin: "http://localhost:5173",
+    Credential: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 
