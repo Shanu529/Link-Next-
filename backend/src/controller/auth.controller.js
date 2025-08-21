@@ -56,10 +56,10 @@ export async function siginup(req, res) {
             expiresIn: "7d",
         })
 
-        res.cookie("token", token, {
+        res.cookie("jwt", token, {
             httpOnly: true,       // cannot be accessed by JS in browser
             secure: process.env.NODE_ENV === "production", // only HTTPS in production
-            sameSite: "strict",   // CSRF protection
+            sameSite: "lax",   // CSRF protection
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
 

@@ -1,18 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 
-import { Routes, Route, Navigate } from "react-router";
-
-import HomePage from "./pages/HomePage";
-import SignupPage from "./pages/SignupPage";
-import Login from "./pages/Login";
-
-import CallPage from "./pages/CallPage";
-import NotificationPage from "./pages/NotificationPage";
-import ChatPage from "./pages/ChatPage";
-import OnBordingPage from "./pages/OnBordingPage";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import toast, { Toaster } from "react-hot-toast";
 
@@ -21,33 +12,47 @@ import axios from "axios";
 
 import { axiosInstance } from "./lib/axios";
 
+import HomePage from "./pages/HomePage.jsx";
+import SignupPage from "./pages/SignupPage.jsx";
+import NotificationPage from "./pages/NotificationPage.jsx";
+import CallPage from "./pages/CallPage.jsx";
+import OnBordingPage from "./pages/OnBordingPage.jsx";
+import Chatpage from "./pages/ChatPage.jsx";
+
+import Login from "./pages/Login";
+import LoadingComponents from "../Components/LoadingComponents.jsx";
+import useAuthUser from "../Hooks/useAuthUser.js";
+
 function App() {
   const [count, setCount] = useState(0);
+  const { isLoading, authUser } = useAuthUser();
 
-  const {data:authData, error, isEnabled,} = useQuery({ queryKey: ["todo"],
-    queryFn: async () => {
-      const res = await axiosInstance.get("/api/user/me");
-      return res.data;
-    },
-    retry: false,
-  });
-  const authUser = authData?.user;
+  console.log("here is authUser", authUser);
+  // console.log("here is onbording value",authUser.onBording);
+  console.log("here is onbording value", authUser?.onBording);
 
-  console.log(authUser);
-
+  // if (isLoading) {
+  //   return <div> {<LoadingComponents />} </div>; // Or show spinner
+  // }
   return (
     <>
-      <button onClick={() => toast.success("Successfully toasted!")}>
+      {/* <button onClick={() => toast.success(" you are Successfully visit!")}>
         click me
-      </button>
+      </button> */}
       <Routes>
         <Route
           path="/"
-          element={authUser ? <HomePage /> : <Navigate to="/login" />}
+          element={
+            authUser && authUser.onBording ? (
+              <HomePage />
+            ) : (
+              <Navigate to={!authUser ? "/login" : "/onbording"} replace />
+            )
+          }
         />
         <Route
-          path="/signup"
-          element={!authUser ? <SignupPage /> : <Navigate to="/" />}
+          path="/SignupPage"
+          element={!authUser ? <SignupPage /> : <Navigate to="/" replace />}
         />
         <Route
           path="/login"
@@ -63,7 +68,7 @@ function App() {
         />
         <Route
           path="/chat"
-          element={authUser ? <ChatPage /> : <Navigate to="/login" />}
+          element={authUser ? <Chatpage /> : <Navigate to="/login" />}
         />
         <Route
           path="/onbording"
