@@ -12,7 +12,7 @@ const useAuthUser = () => {
                 withCredentials: true,
             });
             // const res = await axiosInstance.get("/users/me");
-            console.log("here is log where");
+            console.log("here is log");
             return res.data;
         },
     });

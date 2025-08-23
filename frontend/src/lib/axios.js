@@ -10,6 +10,12 @@ export const axiosInstance = axios.create({
 })
 
 export const completeOnbording = async (userinfoData)=>{
-    const response = await axiosInstance.post("/auth/onbording", userinfoData);
+    const response = await axiosInstance.post("/auth/onboarding", userinfoData);
+    return response.data
+}
+
+
+export const loginFunction = async (loginData)=>{
+    const response = await axiosInstance.post("/auth/login", userinfoData);
     return response.data
 }

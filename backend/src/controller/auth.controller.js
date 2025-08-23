@@ -29,6 +29,7 @@ export async function siginup(req, res) {
         const index = Math.floor(Math.random() * 100) + 1 //generate ramdom index number 
 
         const ramdomAvtar = `https://avatar.iran.liara.run/public/${index}.png`
+        
 
         const newUser = await User.create({
             fullName,
@@ -139,6 +140,8 @@ export function logout(req, res) {
 export const onboard = async (req, res) => {
     try {
         const userId = req.user._id;
+        console.log("here is uesrId",userId);
+        
         const { fullName, bio, nativeLanguage, learningLanguage, location } = req.body;
         if (!fullName || !bio || !nativeLanguage || !learningLanguage || !location) {
             return res.status(400).json({

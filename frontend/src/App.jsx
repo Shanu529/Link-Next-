@@ -46,7 +46,7 @@ function App() {
             authUser && authUser.onBording ? (
               <HomePage />
             ) : (
-              <Navigate to={!authUser ? "/login" : "/onbording"} replace />
+              <Navigate to={!authUser ? "/SignupPage " : "/onbording"} replace />
             )
           }
         />

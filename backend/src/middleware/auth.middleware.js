@@ -33,6 +33,8 @@ export const protectRoute = async (req, res, next) => {
         }
 
         req.user = user;
+        console.log("here is user request sending by user",req.user);
+        
         next();
     } catch (error) {
         console.log("Error in auth middleware", error);
