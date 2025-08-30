@@ -16,6 +16,6 @@ export const completeOnbording = async (userinfoData)=>{
 
 
 export const loginFunction = async (loginData)=>{
-    const response = await axiosInstance.post("/auth/login", userinfoData);
+    const response = await axiosInstance.post("/auth/login",loginData);
     return response.data
 }
