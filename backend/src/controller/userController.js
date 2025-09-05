@@ -13,8 +13,8 @@ export async function getRecommendationUser(req, res) {
         const recommendationUsers = await User.find({
             $and: [
                 { _id: { $ne: currentUseId } },
-                { $id: { $nin: currentUser.friends } },
-                { isOnbording: true },
+                { _id: { $nin: currentUser.friends } },
+                { onBording: true }, //isOnbording
             ],
         });
 
@@ -30,10 +30,10 @@ export async function getRecommendationUser(req, res) {
 
 export async function getMyFriends(req, res) {
     try {
-        const user = await User.findById(req.user.id).select("friends").polygon("friends", "fullName profilePic nativeLanguage learningLanguage");
+        const user = await User.findById(req.user.id).select("friends").populate("friends", "fullName profilePic nativeLanguage learningLanguage");
         res.status(200).json(user.friends);
     } catch (error) {
-        console.error("error in getmyfriends controller ".error.message);
+        console.error("error in getmyfriends controller ", error);
         res.status(500).json({ message: "internal server error" });
     }
 }
@@ -41,7 +41,7 @@ export async function getMyFriends(req, res) {
 
 export async function sendFriendRequest(req, res) {
     try {
-        const myId = req.user.id;
+        const myId = req.user.id; //id
         const { id: recipientId } = req.params;
 
         if (myId === recipientId) {
@@ -60,8 +60,8 @@ export async function sendFriendRequest(req, res) {
             return res.status(400).json({ message: "you already friends with this user" });
 
         }
-        // errpr remove send 
-        const existingRequest = await sendFriendRequest.findOne({
+        // errpr remove send  //sendFriendRequest to FriendRequest
+        const existingRequest = await FriendRequest.findOne({
             $or: [
                 { sender: myId, recipient: recipientId },
                 { sender: recipientId, recipient: myId }
@@ -72,14 +72,14 @@ export async function sendFriendRequest(req, res) {
             return res.status(400).json({ message: "a friend request already exitss between you and this user" })
         }
 
-        const FriendRequest = await FriendRequest.create({
+        const friendRequest = await FriendRequest.create({
             sender: myId,
             recipient: recipientId
         });
 
-        res.status(201).json(FriendRequest)
+        res.status(201).json(friendRequest) ///F to f
     } catch (error) {
-        console.error("error in friends request controller");
+        console.error("error in friends request controller", error);
         res.status(500).json({ message: "internal server error" });
     }
 
@@ -101,9 +101,10 @@ export async function acceptFriendRequest(req, res) {
             $addToSet: { friends: friendRequest.recipient },
         });
 
-        await User.findByIdAndUpdate(friendRequest.sender, {
+        await User.findByIdAndUpdate(friendRequest.recipient, {
             $addToSet: { friends: friendRequest.sender },
         });
+
         res.status(200).json({ message: "friend request acceptd" });
 
     } catch (error) {
@@ -117,14 +118,14 @@ export async function getFriendRequest(req, res) {
     try {
         const incomingReqs = await FriendRequest.find({
             recipient: req.user.id,
-            status: "panding",
+            status: "pending",
 
-        }).populate("sender", "fullName, profilePic, nativeLanguage, learningLanguage");
+        }).populate("sender", "fullName profilePic nativeLanguage learningLanguage");
 
         const acceptReqs = await FriendRequest.find({
             sender: req.user.id,
             status: "accepted"
-        }).populate("recipient", "fullName, profilePic, nativeLanguage, learningLanguage");
+        }).populate("recipient", "fullName profilePic nativeLanguage learningLanguage");
 
         res.status(200).json({ incomingReqs, acceptReqs });
 
@@ -140,8 +141,8 @@ export async function getOutgoingFriendRequest(req, res) {
     try {
         const outgoingRequest = await FriendRequest.find({
             sender: req.user.id,
-            status: "panding",
-        }).populate("recipient", "fullName, profilePic, nativeLanguage, learningLanguage");
+            status: "pending",
+        }).populate("recipient", "fullName profilePic nativeLanguage learningLanguage");
 
         res.status(200).json(outgoingRequest)
 

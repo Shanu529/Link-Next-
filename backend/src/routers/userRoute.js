@@ -14,10 +14,14 @@ route.get("/", getRecommendationUser);
 route.get('/friends', getMyFriends);
 
 route.post("/friend-request/:id", sendFriendRequest)
-route.post("/friend-request/:id/accept", acceptFriendRequest)
+// route.post("/friend-request/:id/accept", acceptFriendRequest)
 
-route.post("/friend-request", getFriendRequest)
-route.post("/outgoin-friend-request", getOutgoingFriendRequest)
+// route.post("/friend-request", getFriendRequest)
+// route.post("/outgoin-friend-request", getOutgoingFriendRequest)
 
+
+route.get("/friend-request", getFriendRequest)
+route.get("/outgoing-friend-requests", getOutgoingFriendRequest)
+route.put("/friend-request/:id/accept", acceptFriendRequest)
 
 export default route;

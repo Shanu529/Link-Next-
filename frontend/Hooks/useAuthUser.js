@@ -8,12 +8,20 @@ const useAuthUser = () => {
     const authUser = useQuery({
         queryKey: ["authUser"],
         queryFn: async () => {
-            const res = await axios.get(backendUrl + "/auth/me", {
-                withCredentials: true,
-            });
-            // const res = await axiosInstance.get("/users/me");
-            console.log("here is log");
-            return res.data;
+
+            try {
+                const res = await axios.get(backendUrl + "/auth/me", {
+                    withCredentials: true,
+                });
+                // const res = await axiosInstance.get("/users/me");
+                console.log("here is log");
+                return res.data;
+            } catch (error) {
+                console.log("error in authUser: ", error);
+                return null;
+
+            }
+
         },
     });
     return { isLoading: authUser.isLoading, authUser: authUser.data?.user }

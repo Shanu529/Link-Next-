@@ -88,7 +88,6 @@
 
 // export default App;
 
-
 // import { Routes, Route, Navigate } from "react-router-dom";
 // import { Toaster } from "react-hot-toast";
 
@@ -127,7 +126,6 @@
 //             )
 //           }
 
-          
 //         />
 
 //         {/* Signup */}
@@ -214,7 +212,6 @@
 
 // export default App;
 
-
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
@@ -241,7 +238,7 @@ function App() {
   return (
     <>
       <Routes>
-        {/* ✅ Root + Protected Layout */}
+        {/*  Root + Protected Layout */}
         <Route
           path="/"
           element={
@@ -254,14 +251,44 @@ function App() {
         >
           {/* Layout children */}
           <Route index element={<HomePage />} />
-          <Route path="notifications" element={<NotificationPage />} />
-          <Route path="call" element={<CallPage />} />
-          <Route path="chat" element={<ChatPage />} />
+          <Route
+            path="/notifications"
+            element={
+              isAuthenticated && isOnboarded ? (
+                <NotificationPage />
+              ) : (
+                <Navigate to={!isAuthenticated ? "/login" : "/onbording"} />
+              )
+            }
+          />
+
+          {/* <CallPage /> */}
+          <Route
+            path="/call/:id"
+            element={
+              isAuthenticated && isOnboarded ? (
+                <CallPage />
+              ) : (
+                <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+              )
+            }
+          />
+
+          <Route
+            path="/chat/:id"
+            element={
+              isAuthenticated && isOnboarded ? (
+                <ChatPage />
+              ) : (
+                <Navigate to={!isAuthenticated ? "/login" : "/onbording"} />
+              )
+            }
+          />
         </Route>
 
         {/* ✅ Auth routes */}
         <Route
-          path="/signup"
+          path="/signupPage"
           element={
             !isAuthenticated ? (
               <SignupPage />
